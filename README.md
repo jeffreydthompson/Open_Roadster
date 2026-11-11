@@ -13,7 +13,7 @@ An open source remote control car you can build from scratch. The chassis, circu
 | **Mechanical** | [`mechanical/`](mechanical/) | Chassis, steering and wheels in FreeCAD, ready-to-print STLs, a sheet metal base, and a Blender body |
 | **Circuits** | [`circuits/`](circuits/) | A 4-layer ESP32-S3 controller board in KiCad, with order-ready files for JLCPCB |
 | **Firmware** | [`code/firmware/`](code/firmware/) | Arduino firmware for motors, steering, lights, battery monitoring and Bluetooth LE |
-| **App** | [`code/app/`](code/app/) | An iOS remote: tilt to steer, with throttle, gears, headlights and a fuel gauge |
+| **App** | [`code/app/`](code/app/) | An iOS and Android remote: tilt to steer, with throttle, gears, headlights and a fuel gauge |
 
 Each folder has its own README with the details.
 
