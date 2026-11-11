@@ -1,0 +1,26 @@
+# clangd config for the ESP32 firmware. Generate the compile database first:
+#   ./esp-flash.sh lsp roadster_ctrl
+CompileFlags:
+  CompilationDatabase: roadster_ctrl
+  # picolibc's limits.h expects this when parsed by clang
+  Add: [-D__GLIBC_USE(x)=1]
+  # Xtensa GCC flags that clang doesn't understand
+  Remove:
+    - -mlongcalls
+    - -mtext-section-literals
+    - -mdisable-hardware-atomics
+    - -fstrict-volatile-bitfields
+    - -fno-tree-switch-conversion
+    - -freorder-blocks
+    - -fno-shrink-wrap
+    - -fipa-pta
+    - -mfix-esp32-psram-cache-issue
+    - -mfix-esp32-psram-cache-strategy=*
+    - -Werror=*
+
+---
+# .ino files are C++ with an implicit Arduino.h include
+If:
+  PathMatch: .*\.ino
+CompileFlags:
+  Add: [-xc++, -include, Arduino.h]

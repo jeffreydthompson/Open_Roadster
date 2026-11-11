@@ -23,6 +23,24 @@ cd code/firmware
 
 The board target is set at the top of `esp-flash.sh` (`esp32:esp32:esp32s3`). If you use the Arduino IDE instead, open `roadster_ctrl/roadster_ctrl.ino` and select an ESP32S3 board.
 
+### Editor setup (clangd)
+
+To get completion and diagnostics in editors that use clangd (Neovim, VS Code, Zed, …), generate a compile database:
+
+```sh
+./esp-flash.sh lsp roadster_ctrl
+```
+
+Then start clangd with `--query-driver` pointing at the ESP32 toolchain so it can find its headers:
+
+| OS | `--query-driver` value |
+| --- | --- |
+| Linux | `$HOME/.arduino15/packages/esp32/tools/*/*/bin/*` |
+| macOS | `$HOME/Library/Arduino15/packages/esp32/tools/*/*/bin/*` |
+| Windows | `%LOCALAPPDATA%\Arduino15\packages\esp32\tools\*\*\bin\*` |
+
+`.clangd` in this folder handles the rest. Run the command again after adding a library.
+
 ## Pins
 
 | Function | Pins |

@@ -61,6 +61,12 @@ LightsModule lights(PIN_WLED, PIN_RLED);
 SerialCommander serialCmd(steering, driveLeft, driveRight);
 BleCommander bleCmd(steering, driveLeft, driveRight, battery, lights);
 
+// Low-battery shutdown, defined below
+void shutDownForLowBattery();
+void sleepUntilBatteryCheck();
+void releaseSleepPins();
+void checkBatteryAfterShutdown();
+
 void setup() {
   if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_TIMER) {
     // Only the low-battery shutdown sets a timer wake
