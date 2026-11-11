@@ -15,7 +15,7 @@ struct ContentView: View {
     }
 
     @State var controller = CentralControl()
-    @State private var screen: Screen = .carPicker
+    @State var screen: Screen = .carPicker
     
     let grad: LinearGradient = .init(gradient: .init(colors: [.init(white: 0.2), .init(white: 0.4)]), startPoint: .bottom, endPoint: .top)
     
@@ -25,18 +25,22 @@ struct ContentView: View {
                 .ignoresSafeArea()
             HStack {
                 GearView(gear: $controller.gear)
+                    .shadow(radius: 3.0)
                 
                 VStack {
                     FuelGaugeView(batteryLevel: controller.batteryLevel, isCharging: controller.isOnUsbPower)
+                        .shadow(color: .black, radius: 3.0)
                     
                     HStack {
                         HeadlightControlView(isOn: $controller.headlight)
                             .padding()
+                            .shadow(color: .black, radius: 2.0)
                         Button {
                             screen = .carPicker
                         } label: {
                             ConnectionView(connected: controller.isConnected)
                         }
+                        .shadow(color: .black, radius: 1.0)
                         .accessibilityLabel(controller.isConnected ? "Connected. Change car" : "Not connected. Select car")
                         .padding()
                     }
@@ -48,6 +52,7 @@ struct ContentView: View {
                 ThrottleView(throttle: $controller.throttle)
                     .frame(width: 165)
                     .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .shadow(color: .black, radius: 2.0)
             }
             .padding(15)
         }
@@ -60,29 +65,6 @@ struct ContentView: View {
                 screen = .carPicker
             }
         }
-        /*ZStack {
-            grad
-                .ignoresSafeArea()
-            FuelGaugeView(batteryLevel: controller.batteryLevel)
-                .foregroundStyle(Color.white)
-                .frame(width: 300, height: 300)
-                .offset(x: -40, y: -70)
-            ConnectionView(connected: controller.isConnected)
-                .foregroundStyle(Color.white)
-                .frame(width: 250)
-                .offset(x: -40, y: 120)
-                .shadow(radius: 5)
-            HStack {
-                GearView(gear: $controller.gear)
-                    .padding(25)
-                Spacer()
-                ThrottleView(throttle: $controller.throttle)
-                    .clipShape(RoundedRectangle(cornerRadius: 45))
-                    .frame(width: 175)
-                    .padding()
-                    .shadow(radius: 5)
-            }
-        }*/
     }
 
     private var isShowingCarPicker: Binding<Bool> {
@@ -94,5 +76,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(controller: CentralControl(), screen: .driving)
 }

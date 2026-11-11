@@ -9,8 +9,9 @@ import SwiftUI
 import Combine
 import CoreBluetooth
 
-// Control packets go out continuously at this rate. The car stops its motors
-// if they stop arriving for 500 ms, so keep this well above 2 Hz.
+/*
+ Control packets go out continuously at this rate. The car stops its motors if they stop arriving for 500 ms, so keep this well above 2 Hz.
+ */
 fileprivate let COMMAND_INTERVAL: TimeInterval = 1.0 / 20.0
 
 enum Gear {
@@ -20,8 +21,20 @@ enum Gear {
 @Observable
 public class CentralControl {
     
+    // state
     var gear: Gear = .park
+    var connectionState: ConnectionState = .disconnected
     
+    var batteryLevel: UInt8 = 0
+    var isOnUsbPower: Bool = false
+    var cars: [DiscoveredCar] = []
+    var bluetoothState: CBManagerState = .unknown
+    var isConnected: Bool {
+        if case .connected = connectionState { return true }
+        return false
+    }
+    
+    // UI Controls
     var pitch: Double = 0 {
         didSet {
             let p = pitch * -100
@@ -29,21 +42,14 @@ public class CentralControl {
             self.steering = pInt
         }
     }
-    
-    var batteryLevel: UInt8 = 0
-    var isOnUsbPower: Bool = false
-    var connectionState: ConnectionState = .disconnected
-    var cars: [DiscoveredCar] = []
-    var bluetoothState: CBManagerState = .unknown
-    
-    var isConnected: Bool {
-        if case .connected = connectionState { return true }
-        return false
-    }
-    
     var throttle: Int16 = 0
+    // map 0-100 UI value to 0-255 microcontroller value
+    private var motorThrottle: Int16 {
+        (throttle * 255) / 100
+    }
     var steering: Int16 = 0
     var headlight: Bool = false
+    
     
     let bleController: BLEController
     let accelerometer: Accelerometer
@@ -148,10 +154,5 @@ public class CentralControl {
 
         let cmd = BLECommand(throttle: cmdThrottle, steering: steering, headlight: headlight ? 1 : 0)
         bleController.send(command: cmd)
-    }
-
-    // The throttle stick runs 0...100; the firmware expects motor PWM, 0...255
-    private var motorThrottle: Int16 {
-        Int16(Int(throttle) * 255 / 100)
     }
 }
